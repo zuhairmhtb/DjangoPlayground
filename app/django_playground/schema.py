@@ -13,7 +13,7 @@ class Query:
     books: typing.List[Book]
 
 
-def get_books():
+async def get_books():
     return [
         Book(
             title="The Great Gatsby",
