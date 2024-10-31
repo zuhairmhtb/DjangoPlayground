@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+
+  postgres:
+    image: postgres:16.4-alpine
+    container_name: postgres-playground
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:${POSTGRES_LOCAL_PORT}"
+    user: "root"
+    volumes:
+      - ./development/postgres/data:/var/lib/postgresql/data
+    networks:
+      - playground_network
+
+
+  pgadmin:
+    image: dpage/pgadmin4:8.11.0
+    container_name: pgadmin-playground
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    volumes:
+      - ./development/pgadmin/data:/pgadmin4/data
+    ports:
+      - "5050:${PGADMIN_LOCAL_PORT}"
+    networks:
+      - playground_network
+
+    user: "root"
+    depends_on:
+      - postgres
+
+networks:
+  playground_network:
+    driver: bridge
+    name: my-playground-network
+    external: true
