@@ -65,8 +65,10 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    "daphne", # must be placed before django.contrib.staticfiles    
     'django.contrib.staticfiles',
-    'django_playground'
+    'corsheaders', # Manages CORS when interacting through a separate frontend
+    'django_playground',
 ]
 
 MIDDLEWARE = [
@@ -98,15 +100,19 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'django_playground.wsgi.application'
-
+ASGI_APPLICATION = 'django_playground.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB', 'mydb'),
+        'USER': os.getenv('POSTGRES_USER', 'postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'postgres'),
+        'HOST': os.getenv("POSTGRES_HOST", "localhost"),
+        'PORT': int(os.getenv("POSTGRES_PORT", "5432")),
     }
 }
 
@@ -143,7 +149,28 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'sass_processor.finders.CssFinder',
+]
+
+# SCSS settings
+SASS_PROCESSOR_ROOT = STATIC_ROOT
+SASS_PROCESSOR_ENABLED = True
+SASS_PRECISION = 8
+SASS_OUTPUT_STYLE = 'compressed'
+
+# Compress settings
+COMPRESS_ENABLED = True
+COMPRESS_CSS_FILTERS = [
+    'compressor.filters.css_default.CssAbsoluteFilter',
+    'compressor.filters.cssmin.rCSSMinFilter'
+]
 
 STATIC_URL = 'static/'
 
