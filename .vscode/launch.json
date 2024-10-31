@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Debug Django Admin",
+        "type": "python",
+        "request": "attach",
+        "pathMappings": [
+          {
+            "localRoot": "${workspaceFolder}/app",
+            "remoteRoot": "/app"
+          }
+        ],
+        "connect": {
+            "port": 3000,
+            "host": "localhost",
+        }
+      }
+    ]
+  }

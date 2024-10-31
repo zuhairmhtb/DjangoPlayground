@@ -41,6 +41,7 @@ package-lock.json
 # !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/extensions.json
+!.vscode/launch.json
 
 # IDE - Visual Studio
 **/.vs/
