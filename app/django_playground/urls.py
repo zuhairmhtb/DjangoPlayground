@@ -20,8 +20,11 @@ from django.urls import path
 from strawberry.django.views import AsyncGraphQLView
 
 from django_playground.schema import schema
+from django_playground.views import index, csrf
 
 urlpatterns = [
+    path("", index, name='home'),
     path('admin/', admin.site.urls),
     path("graphql/", AsyncGraphQLView.as_view(schema=schema)),
+    path("csrf/", csrf, name='csrf'),
 ]

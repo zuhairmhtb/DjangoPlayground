@@ -25,25 +25,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', '')
+SECRET_KEY = os.getenv('SECRET_KEY', "django-insecure-3(%4g+gm0s2a1ev291qd2k^m4_q+n#uc3w^snvsy-h(-=rqvk%")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
+# Add host domains
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
-origins = os.getenv('TRUSTED_ORIGINS', '').split(',')
 
-if origins and len(origins) > 0 and origins[0] != '':
-    CSRF_TRUSTED_ORIGINS = origins
 
-    CORS_ALLOWED_ORIGINS = origins
+# Add CORS allowed origins
+CORS_ALLOWED_ORIGINS = os.getenv('TRUSTED_ORIGINS', '').split(',') #https://vip3rtech6069.com
+if not CORS_ALLOWED_ORIGINS or len(CORS_ALLOWED_ORIGINS) == 0 or CORS_ALLOWED_ORIGINS[0] == '':
+    CORS_ALLOWED_ORIGINS = ALLOWED_HOSTS
+CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
 
+# Allow CSRF token to be sent with the HTTP request from external application
 CORS_ALLOW_CREDENTIALS = True
-CSRF_COOKIE_SAMESITE = 'LAX'
-CSRF_COOKIE_SECURE = not DEBUG
-
-# CSRF_COOKIE_HTTPONLY=True
-# Add allowed headers
+CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = True
 CORS_ALLOW_HEADERS = [
     'accept',
     'accept-encoding',
@@ -58,7 +58,6 @@ CORS_ALLOW_HEADERS = [
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -74,6 +73,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware", # Middleware related to CORS
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -108,7 +108,7 @@ ASGI_APPLICATION = 'django_playground.asgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB', 'mydb'),
+        'NAME': os.getenv('POSTGRES_DB', 'djangoplayground'),
         'USER': os.getenv('POSTGRES_USER', 'postgres'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'postgres'),
         'HOST': os.getenv("POSTGRES_HOST", "localhost"),
